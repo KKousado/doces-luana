@@ -1,0 +1,83 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --ios-bg: #F2F2F7;
+    --ios-card: #FFFFFF;
+    --ios-card-secondary: #F9F9FB;
+    --ios-separator: rgba(60, 60, 67, 0.12);
+    --ios-text: #000000;
+    --ios-text-secondary: #8E8E93;
+    --ios-green: #34C759;
+    --ios-red: #FF3B30;
+    --ios-blue: #007AFF;
+    --ios-pink: #E05688;
+    --ios-caramel: #C28B5E;
+    --ios-amber: #FF9500;
+  }
+
+  .dark {
+    --ios-bg: #000000;
+    --ios-card: #1C1C1E;
+    --ios-card-secondary: #2C2C2E;
+    --ios-separator: rgba(84, 84, 88, 0.35);
+    --ios-text: #FFFFFF;
+    --ios-text-secondary: #8E8E93;
+    --ios-green: #30D158;
+    --ios-red: #FF453A;
+    --ios-blue: #0A84FF;
+    --ios-pink: #F472B6;
+    --ios-caramel: #D4A373;
+    --ios-amber: #FF9F0A;
+  }
+
+  body {
+    background-color: var(--ios-bg);
+    color: var(--ios-text);
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", Inter, system-ui, sans-serif;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+    -webkit-user-select: none;
+    min-height: 100vh;
+    min-height: 100dvh;
+    overflow-x: hidden;
+  }
+
+  input, textarea, select {
+    user-select: text;
+    -webkit-user-select: text;
+  }
+}
+
+/* Safe area support for iOS notches and home indicator */
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom, 20px);
+}
+.pt-safe {
+  padding-top: env(safe-area-inset-top, 20px);
+}
+
+/* Smooth iOS Touch interactions */
+.ios-active:active {
+  transform: scale(0.97);
+  transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Glassmorphism iOS blur header and tabbar */
+.ios-blur {
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+}
+
+/* Custom Inset Grouped Scrollbars & Utilities */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(142, 142, 147, 0.3);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(142, 142, 147, 0.5);
+}

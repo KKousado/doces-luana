@@ -1,0 +1,18 @@
+{
+  "name": "Doces da Luana",
+  "short_name": "Doces da Luana",
+  "description": "Controle e Gestão Financeira para Confeitaria e Loja de Doces",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F2F2F7",
+  "theme_color": "#E05688",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
+
