@@ -40,21 +40,25 @@ export const FinanceProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const [, startTransition] = useTransition();
 
   const [lancamentos, setLancamentos] = useState<Lancamento[]>(() => {
+    if (isSupabaseConfigured) return [];
     const saved = localStorage.getItem(`${STORAGE_KEY}_lancamentos`);
     return saved ? JSON.parse(saved) : INITIAL_LANCAMENTOS;
   });
 
   const [categorias, setCategorias] = useState<Categoria[]>(() => {
+    if (isSupabaseConfigured) return [];
     const saved = localStorage.getItem(`${STORAGE_KEY}_categorias`);
     return saved ? JSON.parse(saved) : INITIAL_CATEGORIES;
   });
 
   const [meta, setMeta] = useState<Meta | null>(() => {
+    if (isSupabaseConfigured) return null;
     const saved = localStorage.getItem(`${STORAGE_KEY}_meta`);
     return saved ? JSON.parse(saved) : INITIAL_META;
   });
 
   const [produtos, setProdutos] = useState<Produto[]>(() => {
+    if (isSupabaseConfigured) return [];
     const saved = localStorage.getItem(`${STORAGE_KEY}_produtos`);
     return saved ? JSON.parse(saved) : INITIAL_PRODUTOS;
   });
@@ -64,19 +68,27 @@ export const FinanceProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
   // Sync to local storage for offline / quick recovery
   useEffect(() => {
-    localStorage.setItem(`${STORAGE_KEY}_lancamentos`, JSON.stringify(lancamentos));
+    if (!isSupabaseConfigured) {
+      localStorage.setItem(`${STORAGE_KEY}_lancamentos`, JSON.stringify(lancamentos));
+    }
   }, [lancamentos]);
 
   useEffect(() => {
-    localStorage.setItem(`${STORAGE_KEY}_categorias`, JSON.stringify(categorias));
+    if (!isSupabaseConfigured) {
+      localStorage.setItem(`${STORAGE_KEY}_categorias`, JSON.stringify(categorias));
+    }
   }, [categorias]);
 
   useEffect(() => {
-    if (meta) localStorage.setItem(`${STORAGE_KEY}_meta`, JSON.stringify(meta));
+    if (!isSupabaseConfigured && meta) {
+      localStorage.setItem(`${STORAGE_KEY}_meta`, JSON.stringify(meta));
+    }
   }, [meta]);
 
   useEffect(() => {
-    localStorage.setItem(`${STORAGE_KEY}_produtos`, JSON.stringify(produtos));
+    if (!isSupabaseConfigured) {
+      localStorage.setItem(`${STORAGE_KEY}_produtos`, JSON.stringify(produtos));
+    }
   }, [produtos]);
 
   // Load from Supabase if configured and user is logged in
@@ -91,16 +103,16 @@ export const FinanceProvider: React.FC<{ children: React.ReactNode }> = ({ child
         supabase.from('produtos').select('*').order('nome'),
       ]);
 
-      if (catRes.data && catRes.data.length > 0) {
+      if (catRes.data) {
         setCategorias(catRes.data);
       }
-      if (lancRes.data && lancRes.data.length > 0) {
+      if (lancRes.data) {
         setLancamentos(lancRes.data);
       }
       if (metaRes.data && metaRes.data.length > 0) {
         setMeta(metaRes.data[0]);
       }
-      if (prodRes.data && prodRes.data.length > 0) {
+      if (prodRes.data) {
         setProdutos(prodRes.data);
       }
     } catch (err) {
