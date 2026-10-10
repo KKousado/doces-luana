@@ -7,7 +7,6 @@ import {
   Moon,
   Sun,
   Smartphone,
-  LogOut,
   Target,
   Download,
   Key,
@@ -18,7 +17,7 @@ import {
 } from 'lucide-react';
 
 export const AjustesView: React.FC = () => {
-  const { user, isConfigured, isDemoMode, setDemoMode, signOut } = useAuth();
+  const { user, isConfigured } = useAuth();
   const { theme, setTheme } = useTheme();
   const { meta, updateMeta, lancamentos } = useFinance();
 
@@ -219,13 +218,7 @@ export const AjustesView: React.FC = () => {
         </ol>
       </div>
 
-      {/* Sair da Conta */}
-      <button
-        onClick={() => signOut()}
-        className="w-full py-3.5 rounded-2xl bg-rose-50 dark:bg-rose-950/30 text-rose-600 dark:text-rose-400 font-semibold text-xs flex items-center justify-center gap-2 ios-active border border-rose-200 dark:border-rose-900/40"
-      >
-        <LogOut size={16} /> Encerrar Sessão
-      </button>
+
     </div>
   );
 };

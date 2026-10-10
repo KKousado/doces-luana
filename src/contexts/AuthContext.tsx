@@ -1,127 +1,46 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
-import type { User, Session } from '@supabase/supabase-js';
-import { supabase, isSupabaseConfigured } from '../lib/supabase';
+import React, { createContext, useContext } from 'react';
 
 interface AuthContextType {
-  user: User | null;
-  session: Session | null;
-  loading: boolean;
-  isConfigured: boolean;
-  isDemoMode: boolean;
+  user: { id: string; email: string; user_metadata: { name: string } };
+  session: null;
+  loading: false;
+  isConfigured: false;
+  isDemoMode: true;
   setDemoMode: (val: boolean) => void;
-  signIn: (email: string, password: string) => Promise<{ error: Error | null }>;
-  signUp: (email: string, password: string) => Promise<{ error: Error | null }>;
   signOut: () => Promise<void>;
 }
 
-const AuthContext = createContext<AuthContextType>({} as AuthContextType);
-
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null);
-  const [session, setSession] = useState<Session | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [isDemoMode, setIsDemoMode] = useState(!isSupabaseConfigured);
-
-  useEffect(() => {
-    if (!isSupabaseConfigured) {
-      // In demo/preview mode without key, provide fallback user
-      setUser({
-        id: 'demo-luana-id',
-        email: 'luana@docesdaluana.com.br',
-        user_metadata: { name: 'Luana Castro' },
-        app_metadata: {},
-        aud: 'authenticated',
-        created_at: new Date().toISOString(),
-      } as unknown as User);
-      setLoading(false);
-      return;
-    }
-
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      setLoading(false);
-    });
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      setLoading(false);
-    });
-
-    return () => subscription.unsubscribe();
-  }, []);
-
-  const signIn = async (email: string, password: string) => {
-    if (!isSupabaseConfigured) {
-      setUser({
-        id: 'demo-luana-id',
-        email,
-        user_metadata: { name: 'Luana Castro' },
-        app_metadata: {},
-        aud: 'authenticated',
-        created_at: new Date().toISOString(),
-      } as unknown as User);
-      return { error: null };
-    }
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
-    return { error };
-  };
-
-  const signUp = async (email: string, password: string) => {
-    if (!isSupabaseConfigured) {
-      setUser({
-        id: 'demo-luana-id',
-        email,
-        user_metadata: { name: 'Luana Castro' },
-        app_metadata: {},
-        aud: 'authenticated',
-        created_at: new Date().toISOString(),
-      } as unknown as User);
-      return { error: null };
-    }
-    const isLuanaAdmin = email.trim().toLowerCase() === 'luoliveiraguimaraes@outlook.com';
-    const { error } = await supabase.auth.signUp({
-      email: email.trim().toLowerCase(),
-      password,
-      options: {
-        data: {
-          name: isLuanaAdmin ? 'Luana' : undefined,
-          is_admin: isLuanaAdmin,
-        },
-        emailRedirectTo:
-          import.meta.env.NEXT_PUBLIC_DEV_SUPABASE_REDIRECT_URL ?? `${window.location.origin}/auth/callback`,
-      },
-    });
-    return { error };
-  };
-
-  const signOut = async () => {
-    if (isSupabaseConfigured) {
-      await supabase.auth.signOut();
-    }
-    setUser(null);
-    setSession(null);
-  };
-
-  return (
-    <AuthContext.Provider
-      value={{
-        user,
-        session,
-        loading,
-        isConfigured: isSupabaseConfigured,
-        isDemoMode,
-        setDemoMode: setIsDemoMode,
-        signIn,
-        signUp,
-        signOut,
-      }}
-    >
-      {children}
-    </AuthContext.Provider>
-  );
+const automaticUser = {
+  id: 'luana-automatic-access',
+  email: 'luoliveiraguimaraes@outlook.com',
+  user_metadata: { name: 'Luana' },
 };
+
+const AuthContext = createContext<AuthContextType>({
+  user: automaticUser,
+  session: null,
+  loading: false,
+  isConfigured: false,
+  isDemoMode: true,
+  setDemoMode: () => undefined,
+  signOut: async () => undefined,
+});
+
+const automaticAuthValue: AuthContextType = {
+  user: automaticUser,
+  session: null,
+  loading: false,
+  isConfigured: false,
+  isDemoMode: true,
+  setDemoMode: () => undefined,
+  signOut: async () => undefined,
+};
+
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => (
+  <AuthContext.Provider value={automaticAuthValue}>
+    {children}
+  </AuthContext.Provider>
+);
 
 export const useAuth = () => useContext(AuthContext);
 
