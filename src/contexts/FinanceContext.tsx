@@ -103,17 +103,23 @@ export const FinanceProvider: React.FC<{ children: React.ReactNode }> = ({ child
         supabase.from('produtos').select('*').order('nome'),
       ]);
 
-      if (catRes.data) {
+      if (catRes.data && catRes.data.length > 0) {
         setCategorias(catRes.data);
+      } else {
+        setCategorias(INITIAL_CATEGORIES);
       }
       if (lancRes.data) {
         setLancamentos(lancRes.data);
       }
       if (metaRes.data && metaRes.data.length > 0) {
         setMeta(metaRes.data[0]);
+      } else {
+        setMeta(INITIAL_META);
       }
-      if (prodRes.data) {
+      if (prodRes.data && prodRes.data.length > 0) {
         setProdutos(prodRes.data);
+      } else {
+        setProdutos(INITIAL_PRODUTOS);
       }
     } catch (err) {
       console.warn('Erro ao carregar dados do Supabase:', err);

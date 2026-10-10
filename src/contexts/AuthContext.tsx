@@ -4,37 +4,30 @@ interface AuthContextType {
   user: { id: string; email: string; user_metadata: { name: string } };
   session: null;
   loading: false;
-  isConfigured: false;
-  isDemoMode: true;
+  isConfigured: boolean;
+  isDemoMode: false;
   setDemoMode: (val: boolean) => void;
   signOut: () => Promise<void>;
 }
 
+// Usuária única e direta do aplicativo: apenas Luana
 const automaticUser = {
-  id: 'luana-automatic-access',
-  email: 'luoliveiraguimaraes@outlook.com',
+  id: 'luana',
+  email: 'luana@docesdaluana.com.br',
   user_metadata: { name: 'Luana' },
 };
-
-const AuthContext = createContext<AuthContextType>({
-  user: automaticUser,
-  session: null,
-  loading: false,
-  isConfigured: false,
-  isDemoMode: true,
-  setDemoMode: () => undefined,
-  signOut: async () => undefined,
-});
 
 const automaticAuthValue: AuthContextType = {
   user: automaticUser,
   session: null,
   loading: false,
-  isConfigured: false,
-  isDemoMode: true,
+  isConfigured: true,
+  isDemoMode: false,
   setDemoMode: () => undefined,
   signOut: async () => undefined,
 };
+
+const AuthContext = createContext<AuthContextType>(automaticAuthValue);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => (
   <AuthContext.Provider value={automaticAuthValue}>
@@ -43,4 +36,3 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 );
 
 export const useAuth = () => useContext(AuthContext);
-

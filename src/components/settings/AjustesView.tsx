@@ -76,23 +76,19 @@ export const AjustesView: React.FC = () => {
       {/* User Header Profile */}
       <div className="p-5 bg-white dark:bg-[#1C1C1E] rounded-3xl border border-neutral-200/80 dark:border-neutral-800 flex items-center gap-4">
         <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-pink-500 to-rose-400 text-white flex items-center justify-center font-bold text-xl shadow-md">
-          DL
+          L
         </div>
         <div>
           <h3 className="text-base font-bold text-neutral-900 dark:text-white">
-            Doces da Luana
+            Luana
           </h3>
           <p className="text-xs text-neutral-400">
-            {user?.email || 'luana@docesdaluana.com.br'}
+            Doces da Luana
           </p>
           <div className="flex items-center gap-1.5 mt-1">
-            <span
-              className={`w-2 h-2 rounded-full ${
-                isConfigured ? 'bg-emerald-500' : 'bg-amber-500'
-              }`}
-            />
+            <span className="w-2 h-2 rounded-full bg-emerald-500" />
             <span className="text-[11px] text-neutral-500 dark:text-neutral-400 font-medium">
-              {isConfigured ? 'Supabase Conectado' : 'Modo Demonstração / Local'}
+              Conectado · Pronto para uso
             </span>
           </div>
         </div>
