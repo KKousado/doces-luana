@@ -80,7 +80,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       } as unknown as User);
       return { error: null };
     }
-    const { error } = await supabase.auth.signUp({ email, password });
+    const isLuanaAdmin = email.trim().toLowerCase() === 'luoliveiraguimaraes@outlook.com';
+    const { error } = await supabase.auth.signUp({
+      email: email.trim().toLowerCase(),
+      password,
+      options: {
+        data: {
+          name: isLuanaAdmin ? 'Luana' : undefined,
+          is_admin: isLuanaAdmin,
+        },
+        emailRedirectTo:
+          import.meta.env.NEXT_PUBLIC_DEV_SUPABASE_REDIRECT_URL ?? `${window.location.origin}/auth/callback`,
+      },
+    });
     return { error };
   };
 
